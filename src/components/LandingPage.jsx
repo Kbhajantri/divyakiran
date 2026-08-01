@@ -116,7 +116,7 @@ export default function LandingPage({ onOpenStory }) {
           <Heart size={isMobile ? 42 : 52} color="#B11226" fill="#B11226" className="heart-pulse" />
         </div>
 
-        {/* Heading in Elegant Serif Italic Font */}
+        {/* Heading: Happy Girlfriend's Day To My Gorgeous Girl ❤️ */}
         <h1 className="font-serif gold-text" style={{
           fontSize: 'clamp(1.9rem, 6vw, 4.2rem)',
           fontStyle: 'italic',
@@ -126,7 +126,7 @@ export default function LandingPage({ onOpenStory }) {
           letterSpacing: '0.01em',
           filter: 'drop-shadow(0 4px 15px rgba(0,0,0,0.95))'
         }}>
-          Happy Girlfriend's Day for My Gorgeous Girl ❤️
+          Happy Girlfriend's Day To My Gorgeous Girl ❤️
         </h1>
 
         {/* Subtitle Quote */}
