@@ -6,7 +6,7 @@ export default function BackgroundAudio({ isAudioPlaying, setIsAudioPlaying }) {
   const [volume, setVolume] = useState(0.7);
   const audioRef = useRef(null);
 
-  // Exact local audio file resolved via getAssetUrl for GitHub Pages base path
+  // Exact local audio file resolved via getAssetUrl for relative paths
   const audioSource = getAssetUrl("/assets/aashiqui2_piano_loop.mp3");
 
   // Play/pause and volume control effect
@@ -61,17 +61,17 @@ export default function BackgroundAudio({ isAudioPlaying, setIsAudioPlaying }) {
   };
 
   return (
-    <div style={{
+    <div className="audio-player-mobile" style={{
       position: 'fixed',
-      top: '20px',
-      right: '24px',
-      zIndex: 9999,
+      top: '16px',
+      right: '16px',
+      zIndex: 99999,
       display: 'flex',
       alignItems: 'center',
-      gap: '10px',
-      backgroundColor: 'rgba(18, 18, 22, 0.92)',
-      border: '1.5px solid rgba(232, 199, 122, 0.4)',
-      padding: '8px 18px',
+      gap: '8px',
+      backgroundColor: 'rgba(18, 18, 22, 0.94)',
+      border: '1.5px solid rgba(232, 199, 122, 0.45)',
+      padding: '8px 16px',
       borderRadius: '50px',
       boxShadow: '0 8px 30px rgba(0,0,0,0.85)',
       backdropFilter: 'blur(16px)'
@@ -96,18 +96,18 @@ export default function BackgroundAudio({ isAudioPlaying, setIsAudioPlaying }) {
         }}
         title={isAudioPlaying ? 'Pause Music' : 'Play Music'}
       >
-        <Music size={18} className={isAudioPlaying ? 'heart-pulse' : ''} />
-        <span className="font-serif" style={{ fontSize: '0.85rem', fontWeight: '600', color: '#F5E5C9' }}>
+        <Music size={16} className={isAudioPlaying ? 'heart-pulse' : ''} />
+        <span className="font-serif track-name" style={{ fontSize: '0.8rem', fontWeight: '600', color: '#F5E5C9' }}>
           Aashiqui 2 • Soothing Piano Loop
         </span>
       </div>
 
       {/* Volume Control Slider */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '6px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}>
         {volume === 0 || !isAudioPlaying ? (
-          <VolumeX size={18} color="#9CA3AF" style={{ cursor: 'pointer' }} onClick={() => setVolume(0.7)} />
+          <VolumeX size={16} color="#9CA3AF" style={{ cursor: 'pointer' }} onClick={() => setVolume(0.7)} />
         ) : (
-          <Volume2 size={18} color="#E8C77A" style={{ cursor: 'pointer' }} onClick={() => setVolume(0)} />
+          <Volume2 size={16} color="#E8C77A" style={{ cursor: 'pointer' }} onClick={() => setVolume(0)} />
         )}
         
         <input
@@ -118,16 +118,13 @@ export default function BackgroundAudio({ isAudioPlaying, setIsAudioPlaying }) {
           value={isAudioPlaying ? volume : 0}
           onChange={handleVolumeChange}
           style={{
-            width: '90px',
+            width: '70px',
             accentColor: '#B11226',
             cursor: 'pointer',
             height: '4px'
           }}
           title={`Volume: ${Math.round((isAudioPlaying ? volume : 0) * 100)}%`}
         />
-        <span style={{ fontSize: '0.75rem', color: '#E8C77A', width: '32px', fontFamily: "'Cormorant Garamond', serif" }}>
-          {Math.round((isAudioPlaying ? volume : 0) * 100)}%
-        </span>
       </div>
     </div>
   );

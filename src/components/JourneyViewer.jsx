@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, RotateCcw, Heart, Maximize2, Minimize2 } from 'lucide-react';
 
 export default function JourneyViewer({ pages }) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
-  const [isCloseViewOn, setIsCloseViewOn] = useState(true); // Close View Mode (Default ON)
+  const [isCloseViewOn, setIsCloseViewOn] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const totalPages = pages.length;
   const currentPage = pages[currentPageIndex];
@@ -52,108 +61,103 @@ export default function JourneyViewer({ pages }) {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      padding: '30px 16px 60px 16px',
+      padding: isMobile ? '70px 10px 80px 10px' : '30px 16px 60px 16px',
       overflowX: 'hidden',
       position: 'relative'
     }}>
       {/* Top Header — Title, Close View Button & Page Counter */}
       <div style={{
-        width: isCloseViewOn ? '75vw' : '55vw',
+        width: isMobile ? '96vw' : (isCloseViewOn ? '75vw' : '55vw'),
         maxWidth: '1100px',
         display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '20px',
+        alignItems: isMobile ? 'flex-start' : 'center',
+        marginBottom: isMobile ? '14px' : '20px',
+        gap: isMobile ? '10px' : '0',
         transition: 'width 0.4s ease'
       }}>
         <div>
-          <span style={{ fontSize: '0.85rem', color: '#B11226', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: isMobile ? '0.75rem' : '0.85rem', color: '#B11226', fontWeight: '700', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
             OUR JOURNEY • PAGE {currentPageIndex + 1} OF {totalPages}
           </span>
-          <h1 className="font-cinzel gold-text" style={{ fontSize: '1.9rem', fontWeight: '800', marginTop: '2px' }}>
+          <h1 className="font-cinzel gold-text" style={{ fontSize: isMobile ? '1.35rem' : '1.9rem', fontWeight: '800', marginTop: '2px' }}>
             {currentPage.chapterTitle || `Page ${currentPageIndex + 1}`}
           </h1>
         </div>
 
         {/* Close View Button & Page Counter */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: isMobile ? 'space-between' : 'flex-end',
+          width: isMobile ? '100%' : 'auto',
+          gap: '12px'
+        }}>
           <button
             onClick={() => setIsCloseViewOn(!isCloseViewOn)}
             className="btn-vintage"
             style={{
-              padding: '8px 20px',
-              fontSize: '0.9rem',
+              padding: isMobile ? '6px 14px' : '8px 20px',
+              fontSize: isMobile ? '0.8rem' : '0.9rem',
+              width: 'auto',
               background: isCloseViewOn
                 ? 'linear-gradient(135deg, #B11226 0%, #7A0A18 100%)'
                 : 'rgba(18, 18, 22, 0.85)',
               borderColor: isCloseViewOn ? '#FFF' : '#D4AF37',
-              boxShadow: isCloseViewOn ? '0 0 20px rgba(177,18,38,0.7)' : 'none'
+              boxShadow: isCloseViewOn ? '0 0 15px rgba(177,18,38,0.7)' : 'none'
             }}
           >
-            {isCloseViewOn ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+            {isCloseViewOn ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
             {isCloseViewOn ? 'Close View ON' : 'Close View'}
           </button>
 
-          <span className="font-serif" style={{ color: '#E8C77A', fontSize: '1.05rem', fontWeight: '600' }}>
+          <span className="font-serif" style={{ color: '#E8C77A', fontSize: isMobile ? '0.95rem' : '1.05rem', fontWeight: '600' }}>
             Page {currentPageIndex + 1} / {totalPages}
           </span>
         </div>
       </div>
 
-      {/* Main Container — Dynamically resizes when Close View is ON */}
+      {/* Main Container — Dynamically resizes */}
       <div style={{
         position: 'relative',
-        width: isCloseViewOn ? '75vw' : '55vw',
-        maxWidth: isCloseViewOn ? '1100px' : '900px',
+        width: isMobile ? '96vw' : (isCloseViewOn ? '75vw' : '55vw'),
+        maxWidth: isMobile ? '100%' : (isCloseViewOn ? '1100px' : '900px'),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         transition: 'width 0.4s ease, max-width 0.4s ease'
       }}>
-        {/* Floating Left Side Navigation Button (Enabled ONLY when Close View is ON) */}
+        {/* Left Navigation Button */}
         {currentPageIndex > 0 && (
           <button
             disabled={!isCloseViewOn}
             onClick={handlePrev}
             style={{
               position: 'fixed',
-              left: isCloseViewOn ? 'calc(12.5vw - 65px)' : 'calc(22.5vw - 65px)',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              zIndex: 90,
-              backgroundColor: isCloseViewOn ? 'rgba(18, 18, 22, 0.92)' : 'rgba(18, 18, 22, 0.4)',
-              border: isCloseViewOn ? '1.5px solid rgba(232, 199, 122, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
+              left: isMobile ? '12px' : (isCloseViewOn ? 'calc(12.5vw - 65px)' : 'calc(22.5vw - 65px)'),
+              top: isMobile ? 'auto' : '50%',
+              bottom: isMobile ? '16px' : 'auto',
+              transform: isMobile ? 'none' : 'translateY(-50%)',
+              zIndex: 99,
+              backgroundColor: isCloseViewOn ? 'rgba(18, 18, 22, 0.94)' : 'rgba(18, 18, 22, 0.4)',
+              border: isCloseViewOn ? '1.5px solid rgba(232, 199, 122, 0.5)' : '1px solid rgba(255, 255, 255, 0.1)',
               color: isCloseViewOn ? '#FFF' : '#6B7280',
-              padding: '14px 20px',
+              padding: isMobile ? '10px 16px' : '14px 20px',
               borderRadius: '50px',
               cursor: isCloseViewOn ? 'pointer' : 'not-allowed',
               opacity: isCloseViewOn ? 1 : 0.3,
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              boxShadow: isCloseViewOn ? '0 8px 30px rgba(0, 0, 0, 0.85), 0 0 15px rgba(232, 199, 122, 0.25)' : 'none',
-              backdropFilter: 'blur(12px)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              gap: '6px',
+              boxShadow: isCloseViewOn ? '0 8px 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(232, 199, 122, 0.3)' : 'none',
+              backdropFilter: 'blur(12px)'
             }}
-            onMouseEnter={(e) => {
-              if (isCloseViewOn) {
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1.08)';
-                e.currentTarget.style.borderColor = '#FFF';
-                e.currentTarget.style.backgroundColor = 'rgba(177, 18, 38, 0.95)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (isCloseViewOn) {
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
-                e.currentTarget.style.borderColor = 'rgba(232, 199, 122, 0.4)';
-                e.currentTarget.style.backgroundColor = 'rgba(18, 18, 22, 0.92)';
-              }
-            }}
-            title={isCloseViewOn ? 'Previous Page' : 'Turn Close View ON to enable navigation'}
+            title="Previous Page"
           >
-            <ChevronLeft size={22} color={isCloseViewOn ? '#E8C77A' : '#6B7280'} />
-            <span className="font-serif" style={{ fontSize: '0.95rem', fontWeight: '600' }}>
-              Previous
+            <ChevronLeft size={isMobile ? 18 : 22} color={isCloseViewOn ? '#E8C77A' : '#6B7280'} />
+            <span className="font-serif" style={{ fontSize: isMobile ? '0.85rem' : '0.95rem', fontWeight: '600' }}>
+              Prev
             </span>
           </button>
         )}
@@ -169,16 +173,16 @@ export default function JourneyViewer({ pages }) {
         }}>
           {currentPage.exactImage ? (
             <div style={{
-              borderRadius: '16px',
-              border: isCloseViewOn ? '2.5px solid rgba(232, 199, 122, 0.6)' : '1.5px solid rgba(232, 199, 122, 0.3)',
-              boxShadow: isCloseViewOn ? '0 30px 90px rgba(0,0,0,0.95), 0 0 35px rgba(177,18,38,0.3)' : '0 20px 60px rgba(0,0,0,0.85)',
+              borderRadius: isMobile ? '12px' : '16px',
+              border: isCloseViewOn ? '2px solid rgba(232, 199, 122, 0.6)' : '1.5px solid rgba(232, 199, 122, 0.3)',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.95)',
               overflow: 'hidden',
               backgroundColor: '#160D08',
               transition: 'all 0.4s ease',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              maxHeight: isCoverPage ? '76vh' : 'none'
+              maxHeight: isCoverPage ? (isMobile ? '70vh' : '76vh') : 'none'
             }}>
               <div style={{
                 position: 'relative',
@@ -192,7 +196,7 @@ export default function JourneyViewer({ pages }) {
                   alt={`Page ${currentPageIndex + 1}`}
                   style={{
                     width: isCoverPage ? 'auto' : '100%',
-                    maxHeight: isCoverPage ? '76vh' : 'auto',
+                    maxHeight: isCoverPage ? (isMobile ? '70vh' : '76vh') : 'auto',
                     maxWidth: '100%',
                     objectFit: 'contain',
                     display: 'block',
@@ -203,9 +207,9 @@ export default function JourneyViewer({ pages }) {
               </div>
             </div>
           ) : (
-            /* Refined High-Contrast Retro Vintage Finale Card */
+            /* Refined Retro Vintage Finale Card */
             <div className="parchment-paper deckled-edge" style={{
-              padding: '60px 48px',
+              padding: isMobile ? '36px 20px' : '60px 48px',
               borderRadius: '20px',
               border: '3px solid #D4C3A3',
               boxShadow: '0 25px 70px rgba(0,0,0,0.9)',
@@ -213,96 +217,81 @@ export default function JourneyViewer({ pages }) {
               textAlign: 'center',
               width: '100%'
             }}>
-              <span className="font-serif" style={{ fontSize: '1rem', color: '#721B29', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              <span className="font-serif" style={{ fontSize: '0.9rem', color: '#721B29', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                 {currentPage.seasonInfo || 'Finale'}
               </span>
 
               <h2 className="font-script" style={{
-                fontSize: 'clamp(2.8rem, 5vw, 3.8rem)',
+                fontSize: isMobile ? '2.4rem' : '3.8rem',
                 color: '#721B29',
                 marginTop: '8px',
-                marginBottom: '20px',
+                marginBottom: '16px',
                 lineHeight: '1.2'
               }}>
                 The Best Chapter Is Still Being Written ❤️
               </h2>
 
               <p className="font-serif" style={{
-                fontSize: 'clamp(1.15rem, 2vw, 1.4rem)',
+                fontSize: isMobile ? '1.05rem' : '1.35rem',
                 color: '#3D2214',
                 fontStyle: 'italic',
-                lineHeight: '1.7',
-                maxWidth: '700px',
-                margin: '0 auto 28px auto'
+                lineHeight: '1.6',
+                margin: '0 auto 24px auto'
               }}>
                 "Every day with you becomes another beautiful page. And I promise... I'll keep writing our story forever."
               </p>
 
-              <div style={{ display: 'inline-block', margin: '12px 0 20px 0' }}>
-                <Heart size={64} color="#721B29" fill="#721B29" className="heart-pulse" />
+              <div style={{ display: 'inline-block', margin: '10px 0 16px 0' }}>
+                <Heart size={isMobile ? 48 : 64} color="#721B29" fill="#721B29" className="heart-pulse" />
               </div>
 
               <h1 className="font-script" style={{
-                fontSize: 'clamp(2.5rem, 4.5vw, 3.2rem)',
+                fontSize: isMobile ? '2.2rem' : '3.2rem',
                 color: '#721B29',
                 fontWeight: '700',
-                marginBottom: '32px'
+                marginBottom: '28px'
               }}>
                 Forever Yours, Kiran ❤️
               </h1>
 
               <button onClick={handleRestart} className="btn-vintage">
-                <RotateCcw size={20} /> Restart Journey
+                <RotateCcw size={18} /> Restart Journey
               </button>
             </div>
           )}
         </div>
 
-        {/* Floating Right Side Navigation Button (Enabled ONLY when Close View is ON) */}
+        {/* Right Navigation Button */}
         {currentPageIndex < totalPages - 1 && (
           <button
             disabled={!isCloseViewOn}
             onClick={handleNext}
             style={{
               position: 'fixed',
-              right: isCloseViewOn ? 'calc(12.5vw - 65px)' : 'calc(22.5vw - 65px)',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              zIndex: 90,
-              backgroundColor: isCloseViewOn ? 'rgba(177, 18, 38, 0.92)' : 'rgba(18, 18, 22, 0.4)',
+              right: isMobile ? '12px' : (isCloseViewOn ? 'calc(12.5vw - 65px)' : 'calc(22.5vw - 65px)'),
+              top: isMobile ? 'auto' : '50%',
+              bottom: isMobile ? '16px' : 'auto',
+              transform: isMobile ? 'none' : 'translateY(-50%)',
+              zIndex: 99,
+              backgroundColor: isCloseViewOn ? 'rgba(177, 18, 38, 0.94)' : 'rgba(18, 18, 22, 0.4)',
               border: isCloseViewOn ? '1.5px solid #D4AF37' : '1px solid rgba(255, 255, 255, 0.1)',
               color: isCloseViewOn ? '#FFF' : '#6B7280',
-              padding: '14px 22px',
+              padding: isMobile ? '10px 18px' : '14px 22px',
               borderRadius: '50px',
               cursor: isCloseViewOn ? 'pointer' : 'not-allowed',
               opacity: isCloseViewOn ? 1 : 0.3,
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              boxShadow: isCloseViewOn ? '0 8px 30px rgba(177, 18, 38, 0.75), 0 0 20px rgba(212, 175, 55, 0.45)' : 'none',
-              backdropFilter: 'blur(12px)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              gap: '6px',
+              boxShadow: isCloseViewOn ? '0 8px 25px rgba(177, 18, 38, 0.8), 0 0 20px rgba(212, 175, 55, 0.5)' : 'none',
+              backdropFilter: 'blur(12px)'
             }}
-            onMouseEnter={(e) => {
-              if (isCloseViewOn) {
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1.08)';
-                e.currentTarget.style.borderColor = '#FFF';
-                e.currentTarget.style.backgroundColor = '#B11226';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (isCloseViewOn) {
-                e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
-                e.currentTarget.style.borderColor = '#D4AF37';
-                e.currentTarget.style.backgroundColor = 'rgba(177, 18, 38, 0.92)';
-              }
-            }}
-            title={isCloseViewOn ? 'Next Page' : 'Turn Close View ON to enable navigation'}
+            title="Next Page"
           >
-            <span className="font-serif" style={{ fontSize: '1rem', fontWeight: '700', letterSpacing: '0.04em' }}>
+            <span className="font-serif" style={{ fontSize: isMobile ? '0.9rem' : '1rem', fontWeight: '700' }}>
               Next Page
             </span>
-            <ChevronRight size={22} color={isCloseViewOn ? '#FFF' : '#6B7280'} />
+            <ChevronRight size={isMobile ? 18 : 22} color={isCloseViewOn ? '#FFF' : '#6B7280'} />
           </button>
         )}
       </div>

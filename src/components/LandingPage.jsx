@@ -1,8 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BookOpen, Heart } from 'lucide-react';
 
 export default function LandingPage({ onOpenStory }) {
   const canvasRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -12,14 +21,14 @@ export default function LandingPage({ onOpenStory }) {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    const handleResize = () => {
+    const handleWindowResize = () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleWindowResize);
 
     // Warm golden dust particles
-    const dustMotes = Array.from({ length: 65 }, () => ({
+    const dustMotes = Array.from({ length: isMobile ? 35 : 65 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       size: Math.random() * 2.2 + 0.6,
@@ -66,10 +75,10 @@ export default function LandingPage({ onOpenStory }) {
     render();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleWindowResize);
       cancelAnimationFrame(animId);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div style={{
@@ -82,7 +91,7 @@ export default function LandingPage({ onOpenStory }) {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '32px 20px',
+      padding: isMobile ? '60px 14px 40px 14px' : '32px 20px',
       textAlign: 'center',
       overflow: 'hidden'
     }}>
@@ -95,26 +104,26 @@ export default function LandingPage({ onOpenStory }) {
         zIndex: 10,
         maxWidth: '820px',
         width: '100%',
-        padding: '52px 40px',
-        borderRadius: '28px',
-        background: 'rgba(20, 10, 6, 0.78)',
+        padding: isMobile ? '36px 18px' : '52px 40px',
+        borderRadius: isMobile ? '20px' : '28px',
+        background: 'rgba(20, 10, 6, 0.82)',
         backdropFilter: 'blur(20px)',
         border: '2px solid rgba(255, 215, 0, 0.35)',
         boxShadow: '0 25px 70px rgba(0, 0, 0, 0.95), 0 0 40px rgba(177, 18, 38, 0.3)'
       }}>
         {/* Pulsing Crimson Heart Icon */}
-        <div style={{ display: 'inline-block', marginBottom: '14px' }}>
-          <Heart size={52} color="#B11226" fill="#B11226" className="heart-pulse" />
+        <div style={{ display: 'inline-block', marginBottom: '12px' }}>
+          <Heart size={isMobile ? 42 : 52} color="#B11226" fill="#B11226" className="heart-pulse" />
         </div>
 
-        {/* Heading in Elegant Serif Italic Font (Matching 2nd Image Style) */}
+        {/* Heading in Elegant Serif Italic Font */}
         <h1 className="font-serif gold-text" style={{
-          fontSize: 'clamp(2.4rem, 5.2vw, 4.2rem)',
+          fontSize: 'clamp(1.9rem, 6vw, 4.2rem)',
           fontStyle: 'italic',
           fontWeight: '700',
           lineHeight: '1.25',
-          marginBottom: '18px',
-          letterSpacing: '0.02em',
+          marginBottom: '16px',
+          letterSpacing: '0.01em',
           filter: 'drop-shadow(0 4px 15px rgba(0,0,0,0.95))'
         }}>
           Happy Girlfriend's Day for My Gorgeous Girl ❤️
@@ -122,11 +131,11 @@ export default function LandingPage({ onOpenStory }) {
 
         {/* Subtitle Quote */}
         <p className="font-serif" style={{
-          fontSize: 'clamp(1.15rem, 2.2vw, 1.45rem)',
+          fontSize: 'clamp(1rem, 3.5vw, 1.45rem)',
           color: '#FFF8DC',
           fontStyle: 'italic',
           lineHeight: '1.6',
-          marginBottom: '32px',
+          marginBottom: isMobile ? '24px' : '32px',
           letterSpacing: '0.02em',
           textShadow: '0 2px 12px rgba(0,0,0,0.95)'
         }}>
@@ -135,24 +144,24 @@ export default function LandingPage({ onOpenStory }) {
 
         {/* High-Contrast Inner Story Box */}
         <div style={{
-          backgroundColor: 'rgba(10, 5, 2, 0.75)',
-          padding: '28px 32px',
-          borderRadius: '18px',
+          backgroundColor: 'rgba(10, 5, 2, 0.78)',
+          padding: isMobile ? '20px 16px' : '28px 32px',
+          borderRadius: '16px',
           border: '1.5px solid rgba(255, 215, 0, 0.35)',
           boxShadow: 'inset 0 0 20px rgba(0,0,0,0.8)',
-          marginBottom: '40px',
+          marginBottom: isMobile ? '28px' : '40px',
           color: '#FFF8DC',
-          fontSize: '1.15rem',
-          lineHeight: '1.8',
+          fontSize: isMobile ? '1rem' : '1.15rem',
+          lineHeight: '1.7',
           fontFamily: "'Cormorant Garamond', serif"
         }}>
-          <p style={{ marginBottom: '12px', color: '#FFF8DC', textShadow: '0 1px 4px rgba(0,0,0,0.9)' }}>
+          <p style={{ marginBottom: '10px', color: '#FFF8DC' }}>
             This isn't just a website.
           </p>
-          <p style={{ marginBottom: '12px', color: '#FFF8DC', textShadow: '0 1px 4px rgba(0,0,0,0.9)' }}>
+          <p style={{ marginBottom: '10px', color: '#FFF8DC' }}>
             It's a little book filled with the moments, memories, and emotions that I could never express completely with words.
           </p>
-          <p style={{ fontWeight: '700', color: '#FFD700', textShadow: '0 2px 8px rgba(0,0,0,0.95)' }}>
+          <p style={{ fontWeight: '700', color: '#FFD700' }}>
             Today I want you to open it, one page at a time.
           </p>
         </div>
@@ -162,22 +171,25 @@ export default function LandingPage({ onOpenStory }) {
           onClick={onOpenStory}
           className="btn-vintage"
           style={{
-            fontSize: '1.25rem',
-            padding: '18px 48px',
-            borderRadius: '50px'
+            fontSize: isMobile ? '1.1rem' : '1.25rem',
+            padding: isMobile ? '16px 28px' : '18px 48px',
+            borderRadius: '50px',
+            width: isMobile ? '100%' : 'auto',
+            justifyContent: 'center'
           }}
         >
-          <BookOpen size={24} color="#FFF8DC" /> OPEN OUR STORY
+          <BookOpen size={isMobile ? 20 : 24} color="#FFF8DC" /> OPEN OUR STORY
         </button>
       </div>
 
       {/* Footer subtle sign-off */}
       <div style={{
-        position: 'absolute',
-        bottom: '24px',
-        fontSize: '0.85rem',
+        position: isMobile ? 'relative' : 'absolute',
+        bottom: isMobile ? 'auto' : '24px',
+        marginTop: isMobile ? '24px' : '0',
+        fontSize: isMobile ? '0.75rem' : '0.85rem',
         color: '#D4AF37',
-        letterSpacing: '0.12em',
+        letterSpacing: '0.1em',
         fontFamily: "'Cinzel', serif",
         textShadow: '0 2px 8px rgba(0,0,0,0.9)'
       }}>
