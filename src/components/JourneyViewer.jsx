@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, RotateCcw, Heart } from 'lucide-react';
 
 export default function JourneyViewer({ pages }) {
@@ -14,39 +14,9 @@ export default function JourneyViewer({ pages }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Dynamically compute active pages list based on screen ratio (Mobile vs Desktop)
-  const activePages = useMemo(() => {
-    if (!isMobile) return pages;
-
-    const result = [];
-    pages.forEach((page) => {
-      if (page.mobileImages && page.mobileImages.length > 0) {
-        page.mobileImages.forEach((mImg, index) => {
-          result.push({
-            ...page,
-            episodeTitle: `${page.episodeTitle || 'Episode'} (Page ${index + 1}/${page.mobileImages.length})`,
-            chapterTitle: `${page.chapterTitle} — Part ${index + 1}`,
-            exactImage: mImg,
-            isMobilePage: true
-          });
-        });
-      } else {
-        result.push(page);
-      }
-    });
-    return result;
-  }, [pages, isMobile]);
-
-  // Reset page index if bounds change when switching responsive mode
-  useEffect(() => {
-    if (currentPageIndex >= activePages.length) {
-      setCurrentPageIndex(0);
-    }
-  }, [activePages, currentPageIndex]);
-
-  const totalPages = activePages.length;
-  const currentPage = activePages[currentPageIndex] || activePages[0];
-  const isSinglePortraitPage = isMobile || currentPageIndex === 0 || currentPage.isMobilePage;
+  const totalPages = pages.length;
+  const currentPage = pages[currentPageIndex];
+  const isCoverPage = currentPageIndex === 0;
 
   const handleNext = () => {
     if (currentPageIndex < totalPages - 1 && !isFlipping) {
@@ -92,7 +62,7 @@ export default function JourneyViewer({ pages }) {
       overflowX: 'hidden',
       position: 'relative'
     }}>
-      {/* Top Header — Title & Page Counter */}
+      {/* Top Header — Title & Page Counter (No Close View button) */}
       <div style={{
         width: isMobile ? '96vw' : '75vw',
         maxWidth: '1100px',
@@ -107,7 +77,7 @@ export default function JourneyViewer({ pages }) {
           <span style={{ fontSize: isMobile ? '0.75rem' : '0.85rem', color: '#B11226', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
             OUR JOURNEY • PAGE {currentPageIndex + 1} OF {totalPages}
           </span>
-          <h1 className="font-cinzel gold-text" style={{ fontSize: isMobile ? '1.3rem' : '1.9rem', fontWeight: '800', marginTop: '2px' }}>
+          <h1 className="font-cinzel gold-text" style={{ fontSize: isMobile ? '1.35rem' : '1.9rem', fontWeight: '800', marginTop: '2px' }}>
             {currentPage.chapterTitle || `Page ${currentPageIndex + 1}`}
           </h1>
         </div>
@@ -170,7 +140,7 @@ export default function JourneyViewer({ pages }) {
           </button>
         )}
 
-        {/* Parchment Card Container with Dark Shade Background & Matching Thin Border */}
+        {/* Parchment Card Container with Dark Black Shade Background & Matching Thin Gold Border */}
         <div style={{
           width: '100%',
           opacity: isFlipping ? 0.25 : 1,
@@ -185,13 +155,13 @@ export default function JourneyViewer({ pages }) {
               border: '1.5px solid rgba(232, 199, 122, 0.35)',
               boxShadow: '0 25px 70px rgba(0,0,0,0.98), 0 0 25px rgba(177,18,38,0.2)',
               overflow: 'hidden',
-              backgroundColor: '#050508',
+              backgroundColor: '#050508', // Dark black shade background replacing white border
               padding: isMobile ? '4px' : '6px',
               transition: 'all 0.3s ease',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              maxHeight: isSinglePortraitPage ? (isMobile ? '74vh' : '76vh') : 'none'
+              maxHeight: isCoverPage ? (isMobile ? '70vh' : '76vh') : 'none'
             }}>
               <div style={{
                 position: 'relative',
@@ -205,8 +175,8 @@ export default function JourneyViewer({ pages }) {
                   src={currentPage.exactImage}
                   alt={`Page ${currentPageIndex + 1}`}
                   style={{
-                    width: isSinglePortraitPage ? 'auto' : '100%',
-                    maxHeight: isSinglePortraitPage ? (isMobile ? '74vh' : '76vh') : 'auto',
+                    width: isCoverPage ? 'auto' : '100%',
+                    maxHeight: isCoverPage ? (isMobile ? '70vh' : '76vh') : 'auto',
                     maxWidth: '100%',
                     objectFit: 'contain',
                     display: 'block',

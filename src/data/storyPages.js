@@ -21,16 +21,11 @@ export const STORY_PAGES = [
   {
     chapterNumber: 1,
     seasonInfo: "Season 1 — The Beginning",
-    episodeTitle: "Episode 1 (Part 1)",
+    episodeTitle: "Episode 1",
     chapterTitle: "The First Time I Saw You",
     dateMeta: "August 2022 — First Semester, VTU Engineering College, Belagavi",
     quote: "Mine began on a normal college morning...",
-    exactImage: getAssetUrl("/assets/user_parchment_exact_ep1.jpg"),
-    mobileImage: getAssetUrl("/assets/user_parchment_exact_ep1_mobile_p1.jpg"),
-    mobileImages: [
-      getAssetUrl("/assets/user_parchment_exact_ep1_mobile_p1.jpg"),
-      getAssetUrl("/assets/user_parchment_exact_ep1_mobile_p2.jpg")
-    ]
+    exactImage: getAssetUrl("/assets/user_parchment_exact_ep1.jpg")
   },
   {
     chapterNumber: 2,
