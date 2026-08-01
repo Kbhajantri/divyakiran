@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, RotateCcw, Heart, Maximize2, Minimize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RotateCcw, Heart } from 'lucide-react';
 
 export default function JourneyViewer({ pages }) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
-  const [isCloseViewOn, setIsCloseViewOn] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -20,7 +19,6 @@ export default function JourneyViewer({ pages }) {
   const isCoverPage = currentPageIndex === 0;
 
   const handleNext = () => {
-    if (!isCloseViewOn) return;
     if (currentPageIndex < totalPages - 1 && !isFlipping) {
       setIsFlipping(true);
       setTimeout(() => {
@@ -32,7 +30,6 @@ export default function JourneyViewer({ pages }) {
   };
 
   const handlePrev = () => {
-    if (!isCloseViewOn) return;
     if (currentPageIndex > 0 && !isFlipping) {
       setIsFlipping(true);
       setTimeout(() => {
@@ -65,20 +62,19 @@ export default function JourneyViewer({ pages }) {
       overflowX: 'hidden',
       position: 'relative'
     }}>
-      {/* Top Header — Title, Close View Button & Page Counter */}
+      {/* Top Header — Title & Page Counter (No Close View button) */}
       <div style={{
-        width: isMobile ? '96vw' : (isCloseViewOn ? '75vw' : '55vw'),
+        width: isMobile ? '96vw' : '75vw',
         maxWidth: '1100px',
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between',
         alignItems: isMobile ? 'flex-start' : 'center',
         marginBottom: isMobile ? '14px' : '20px',
-        gap: isMobile ? '10px' : '0',
-        transition: 'width 0.4s ease'
+        gap: isMobile ? '8px' : '0'
       }}>
         <div>
-          <span style={{ fontSize: isMobile ? '0.75rem' : '0.85rem', color: '#B11226', fontWeight: '700', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: isMobile ? '0.75rem' : '0.85rem', color: '#B11226', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
             OUR JOURNEY • PAGE {currentPageIndex + 1} OF {totalPages}
           </span>
           <h1 className="font-cinzel gold-text" style={{ fontSize: isMobile ? '1.35rem' : '1.9rem', fontWeight: '800', marginTop: '2px' }}>
@@ -86,83 +82,65 @@ export default function JourneyViewer({ pages }) {
           </h1>
         </div>
 
-        {/* Close View Button & Page Counter */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: isMobile ? 'space-between' : 'flex-end',
-          width: isMobile ? '100%' : 'auto',
-          gap: '12px'
-        }}>
-          <button
-            onClick={() => setIsCloseViewOn(!isCloseViewOn)}
-            className="btn-vintage"
-            style={{
-              padding: isMobile ? '6px 14px' : '8px 20px',
-              fontSize: isMobile ? '0.8rem' : '0.9rem',
-              width: 'auto',
-              background: isCloseViewOn
-                ? 'linear-gradient(135deg, #B11226 0%, #7A0A18 100%)'
-                : 'rgba(18, 18, 22, 0.85)',
-              borderColor: isCloseViewOn ? '#FFF' : '#D4AF37',
-              boxShadow: isCloseViewOn ? '0 0 15px rgba(177,18,38,0.7)' : 'none'
-            }}
-          >
-            {isCloseViewOn ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
-            {isCloseViewOn ? 'Close View ON' : 'Close View'}
-          </button>
-
-          <span className="font-serif" style={{ color: '#E8C77A', fontSize: isMobile ? '0.95rem' : '1.05rem', fontWeight: '600' }}>
-            Page {currentPageIndex + 1} / {totalPages}
-          </span>
-        </div>
+        {/* Clean Page Counter */}
+        <span className="font-serif" style={{ color: '#E8C77A', fontSize: isMobile ? '0.95rem' : '1.05rem', fontWeight: '600' }}>
+          Page {currentPageIndex + 1} / {totalPages}
+        </span>
       </div>
 
-      {/* Main Container — Dynamically resizes */}
+      {/* Main Container */}
       <div style={{
         position: 'relative',
-        width: isMobile ? '96vw' : (isCloseViewOn ? '75vw' : '55vw'),
-        maxWidth: isMobile ? '100%' : (isCloseViewOn ? '1100px' : '900px'),
+        width: isMobile ? '96vw' : '75vw',
+        maxWidth: isMobile ? '100%' : '1100px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        transition: 'width 0.4s ease, max-width 0.4s ease'
+        justifyContent: 'center'
       }}>
-        {/* Left Navigation Button */}
+        {/* Floating Left Side Navigation Button */}
         {currentPageIndex > 0 && (
           <button
-            disabled={!isCloseViewOn}
             onClick={handlePrev}
             style={{
               position: 'fixed',
-              left: isMobile ? '12px' : (isCloseViewOn ? 'calc(12.5vw - 65px)' : 'calc(22.5vw - 65px)'),
+              left: isMobile ? '12px' : 'calc(12.5vw - 65px)',
               top: isMobile ? 'auto' : '50%',
               bottom: isMobile ? '16px' : 'auto',
               transform: isMobile ? 'none' : 'translateY(-50%)',
               zIndex: 99,
-              backgroundColor: isCloseViewOn ? 'rgba(18, 18, 22, 0.94)' : 'rgba(18, 18, 22, 0.4)',
-              border: isCloseViewOn ? '1.5px solid rgba(232, 199, 122, 0.5)' : '1px solid rgba(255, 255, 255, 0.1)',
-              color: isCloseViewOn ? '#FFF' : '#6B7280',
+              backgroundColor: 'rgba(18, 18, 22, 0.94)',
+              border: '1.5px solid rgba(232, 199, 122, 0.5)',
+              color: '#FFF',
               padding: isMobile ? '10px 16px' : '14px 20px',
               borderRadius: '50px',
-              cursor: isCloseViewOn ? 'pointer' : 'not-allowed',
-              opacity: isCloseViewOn ? 1 : 0.3,
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              boxShadow: isCloseViewOn ? '0 8px 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(232, 199, 122, 0.3)' : 'none',
-              backdropFilter: 'blur(12px)'
+              boxShadow: '0 8px 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(232, 199, 122, 0.3)',
+              backdropFilter: 'blur(12px)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = isMobile ? 'scale(1.05)' : 'translateY(-50%) scale(1.08)';
+              e.currentTarget.style.borderColor = '#FFF';
+              e.currentTarget.style.backgroundColor = 'rgba(177, 18, 38, 0.95)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = isMobile ? 'none' : 'translateY(-50%) scale(1)';
+              e.currentTarget.style.borderColor = 'rgba(232, 199, 122, 0.5)';
+              e.currentTarget.style.backgroundColor = 'rgba(18, 18, 22, 0.94)';
             }}
             title="Previous Page"
           >
-            <ChevronLeft size={isMobile ? 18 : 22} color={isCloseViewOn ? '#E8C77A' : '#6B7280'} />
+            <ChevronLeft size={isMobile ? 18 : 22} color="#E8C77A" />
             <span className="font-serif" style={{ fontSize: isMobile ? '0.85rem' : '0.95rem', fontWeight: '600' }}>
               Prev
             </span>
           </button>
         )}
 
-        {/* Parchment Card Container */}
+        {/* Parchment Card Container with Dark Black Shade Background & Matching Thin Gold Border */}
         <div style={{
           width: '100%',
           opacity: isFlipping ? 0.25 : 1,
@@ -174,11 +152,12 @@ export default function JourneyViewer({ pages }) {
           {currentPage.exactImage ? (
             <div style={{
               borderRadius: isMobile ? '12px' : '16px',
-              border: isCloseViewOn ? '2px solid rgba(232, 199, 122, 0.6)' : '1.5px solid rgba(232, 199, 122, 0.3)',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.95)',
+              border: '1.5px solid rgba(232, 199, 122, 0.35)',
+              boxShadow: '0 25px 70px rgba(0,0,0,0.98), 0 0 25px rgba(177,18,38,0.2)',
               overflow: 'hidden',
-              backgroundColor: '#160D08',
-              transition: 'all 0.4s ease',
+              backgroundColor: '#050508', // Dark black shade background replacing white border
+              padding: isMobile ? '4px' : '6px',
+              transition: 'all 0.3s ease',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -189,7 +168,8 @@ export default function JourneyViewer({ pages }) {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                backgroundColor: '#050508'
               }}>
                 <img
                   src={currentPage.exactImage}
@@ -207,7 +187,7 @@ export default function JourneyViewer({ pages }) {
               </div>
             </div>
           ) : (
-            /* Refined Retro Vintage Finale Card */
+            /* Refined High-Contrast Retro Vintage Finale Card */
             <div className="parchment-paper deckled-edge" style={{
               padding: isMobile ? '36px 20px' : '60px 48px',
               borderRadius: '20px',
@@ -261,37 +241,46 @@ export default function JourneyViewer({ pages }) {
           )}
         </div>
 
-        {/* Right Navigation Button */}
+        {/* Floating Right Side Navigation Button */}
         {currentPageIndex < totalPages - 1 && (
           <button
-            disabled={!isCloseViewOn}
             onClick={handleNext}
             style={{
               position: 'fixed',
-              right: isMobile ? '12px' : (isCloseViewOn ? 'calc(12.5vw - 65px)' : 'calc(22.5vw - 65px)'),
+              right: isMobile ? '12px' : 'calc(12.5vw - 65px)',
               top: isMobile ? 'auto' : '50%',
               bottom: isMobile ? '16px' : 'auto',
               transform: isMobile ? 'none' : 'translateY(-50%)',
               zIndex: 99,
-              backgroundColor: isCloseViewOn ? 'rgba(177, 18, 38, 0.94)' : 'rgba(18, 18, 22, 0.4)',
-              border: isCloseViewOn ? '1.5px solid #D4AF37' : '1px solid rgba(255, 255, 255, 0.1)',
-              color: isCloseViewOn ? '#FFF' : '#6B7280',
+              backgroundColor: 'rgba(177, 18, 38, 0.94)',
+              border: '1.5px solid #D4AF37',
+              color: '#FFF',
               padding: isMobile ? '10px 18px' : '14px 22px',
               borderRadius: '50px',
-              cursor: isCloseViewOn ? 'pointer' : 'not-allowed',
-              opacity: isCloseViewOn ? 1 : 0.3,
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              boxShadow: isCloseViewOn ? '0 8px 25px rgba(177, 18, 38, 0.8), 0 0 20px rgba(212, 175, 55, 0.5)' : 'none',
-              backdropFilter: 'blur(12px)'
+              boxShadow: '0 8px 25px rgba(177, 18, 38, 0.8), 0 0 20px rgba(212, 175, 55, 0.5)',
+              backdropFilter: 'blur(12px)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = isMobile ? 'scale(1.05)' : 'translateY(-50%) scale(1.08)';
+              e.currentTarget.style.borderColor = '#FFF';
+              e.currentTarget.style.backgroundColor = '#B11226';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = isMobile ? 'none' : 'translateY(-50%) scale(1)';
+              e.currentTarget.style.borderColor = '#D4AF37';
+              e.currentTarget.style.backgroundColor = 'rgba(177, 18, 38, 0.94)';
             }}
             title="Next Page"
           >
             <span className="font-serif" style={{ fontSize: isMobile ? '0.9rem' : '1rem', fontWeight: '700' }}>
               Next Page
             </span>
-            <ChevronRight size={isMobile ? 18 : 22} color={isCloseViewOn ? '#FFF' : '#6B7280'} />
+            <ChevronRight size={isMobile ? 18 : 22} color="#FFF" />
           </button>
         )}
       </div>
