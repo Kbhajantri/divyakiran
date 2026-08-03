@@ -4,15 +4,18 @@ import { ChevronLeft, ChevronRight, RotateCcw, Heart } from 'lucide-react';
 export default function JourneyViewer({ pages }) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setWindowWidth(window.innerWidth);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const isMobile = windowWidth <= 768;
+  const isTablet = windowWidth > 768 && windowWidth <= 1100;
 
   const totalPages = pages.length;
   const currentPage = pages[currentPageIndex];
@@ -49,6 +52,13 @@ export default function JourneyViewer({ pages }) {
     }, 250);
   };
 
+  // Compute manuscript card width dynamically to guarantee buttons NEVER overlap the image
+  const getCardWidth = () => {
+    if (isMobile) return '96vw';
+    if (isTablet) return 'calc(100vw - 260px)';
+    return 'min(72vw, 1000px)';
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -62,16 +72,17 @@ export default function JourneyViewer({ pages }) {
       overflowX: 'hidden',
       position: 'relative'
     }}>
-      {/* Top Header — Title & Page Counter (No Close View button) */}
+      {/* Top Header — Title & Page Counter */}
       <div style={{
-        width: isMobile ? '96vw' : '75vw',
-        maxWidth: '1100px',
+        width: getCardWidth(),
+        maxWidth: '1000px',
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between',
         alignItems: isMobile ? 'flex-start' : 'center',
         marginBottom: isMobile ? '14px' : '20px',
-        gap: isMobile ? '8px' : '0'
+        gap: isMobile ? '8px' : '0',
+        transition: 'width 0.3s ease'
       }}>
         <div>
           <span style={{ fontSize: isMobile ? '0.75rem' : '0.85rem', color: '#B11226', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
@@ -91,19 +102,20 @@ export default function JourneyViewer({ pages }) {
       {/* Main Container */}
       <div style={{
         position: 'relative',
-        width: isMobile ? '96vw' : '75vw',
-        maxWidth: isMobile ? '100%' : '1100px',
+        width: getCardWidth(),
+        maxWidth: '1000px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        transition: 'width 0.3s ease'
       }}>
-        {/* Floating Left Side Navigation Button */}
+        {/* Floating Left Side Navigation Button — Positioned safely outside manuscript card */}
         {currentPageIndex > 0 && (
           <button
             onClick={handlePrev}
             style={{
               position: 'fixed',
-              left: isMobile ? '12px' : 'calc(12.5vw - 65px)',
+              left: isMobile ? '12px' : (isTablet ? '16px' : '24px'),
               top: isMobile ? 'auto' : '50%',
               bottom: isMobile ? '16px' : 'auto',
               transform: isMobile ? 'none' : 'translateY(-50%)',
@@ -155,7 +167,7 @@ export default function JourneyViewer({ pages }) {
               border: '1.5px solid rgba(232, 199, 122, 0.35)',
               boxShadow: '0 25px 70px rgba(0,0,0,0.98), 0 0 25px rgba(177,18,38,0.2)',
               overflow: 'hidden',
-              backgroundColor: '#050508', // Dark black shade background replacing white border
+              backgroundColor: '#050508',
               padding: isMobile ? '4px' : '6px',
               transition: 'all 0.3s ease',
               display: 'flex',
@@ -241,13 +253,13 @@ export default function JourneyViewer({ pages }) {
           )}
         </div>
 
-        {/* Floating Right Side Navigation Button */}
+        {/* Floating Right Side Navigation Button — Positioned safely outside manuscript card */}
         {currentPageIndex < totalPages - 1 && (
           <button
             onClick={handleNext}
             style={{
               position: 'fixed',
-              right: isMobile ? '12px' : 'calc(12.5vw - 65px)',
+              right: isMobile ? '12px' : (isTablet ? '16px' : '24px'),
               top: isMobile ? 'auto' : '50%',
               bottom: isMobile ? '16px' : 'auto',
               transform: isMobile ? 'none' : 'translateY(-50%)',
