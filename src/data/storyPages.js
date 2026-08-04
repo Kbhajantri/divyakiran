@@ -119,6 +119,51 @@ export const STORY_PAGES = [
   },
   {
     chapterNumber: 12,
+    seasonInfo: "Season 8 — Our First Date After \"Yes\"",
+    episodeTitle: "Episode 8 (Part 1)",
+    chapterTitle: "A Rainy Day I'll Never Forget",
+    dateMeta: "6 July 2026 — 11:00 AM, CBT Belagavi",
+    quote: "This time... I wasn't waiting for a classmate. I was waiting for my girlfriend. ❤️",
+    exactImage: getAssetUrl("/assets/user_parchment_exact_ep8_part1.jpg")
+  },
+  {
+    chapterNumber: 13,
+    seasonInfo: "Season 8 — Our First Date After \"Yes\"",
+    episodeTitle: "Episode 8 (Part 2)",
+    chapterTitle: "Conversations, Burger King & Rajahansa Fort",
+    dateMeta: "6 July 2026 — Afternoon",
+    quote: "After four years of loving you silently... You were finally beside me. ❤️",
+    exactImage: getAssetUrl("/assets/user_parchment_exact_ep8_part2.jpg")
+  },
+  {
+    chapterNumber: 14,
+    seasonInfo: "Season 8 — Our First Date After \"Yes\"",
+    episodeTitle: "Episode 8 (Part 3)",
+    chapterTitle: "Running Through the Rain Together",
+    dateMeta: "6 July 2026 — Evening",
+    quote: "Happiness was never about the food. It was always about the person beside me that is My Girl DIVYA. ❤️",
+    exactImage: getAssetUrl("/assets/user_parchment_exact_ep8_part3.jpg")
+  },
+  {
+    chapterNumber: 15,
+    seasonInfo: "Season 8 — Our First Date After \"Yes\"",
+    episodeTitle: "Episode 8 (Part 4)",
+    chapterTitle: "Soft Rain, Music & The Hair Clip",
+    dateMeta: "6 July 2026 — Bus Stand Goodbye",
+    quote: "I'll give this hair clip back to you on the day I stand beside you at our wedding. ❤️",
+    exactImage: getAssetUrl("/assets/user_parchment_exact_ep8_part4.jpg")
+  },
+  {
+    chapterNumber: 16,
+    seasonInfo: "Season 8 — Our First Date After \"Yes\"",
+    episodeTitle: "Episode 8 (Part 5)",
+    chapterTitle: "Snapchat Selfie Video & WhatsApp \"Yummy\" Message",
+    dateMeta: "6 July 2026 — Night",
+    quote: "6 July 2026 will always be one of the most beautiful days of my life. ❤️",
+    exactImage: getAssetUrl("/assets/user_parchment_exact_ep8_part5.jpg")
+  },
+  {
+    chapterNumber: 17,
     seasonInfo: "Finale",
     episodeTitle: "Final Chapter",
     chapterTitle: "The Best Chapter Is Still Being Written ❤️",
