@@ -3,15 +3,17 @@ import { BookOpen } from 'lucide-react';
 
 export default function LandingPage({ onOpenStory }) {
   const canvasRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setWindowWidth(window.innerWidth);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const isMobile = windowWidth <= 768;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -104,7 +106,7 @@ export default function LandingPage({ onOpenStory }) {
         zIndex: 10,
         maxWidth: '820px',
         width: '100%',
-        padding: isMobile ? '44px 20px' : '64px 48px',
+        padding: isMobile ? '40px 16px' : '64px 48px',
         borderRadius: isMobile ? '20px' : '28px',
         background: 'rgba(20, 10, 6, 0.82)',
         backdropFilter: 'blur(20px)',
@@ -113,31 +115,37 @@ export default function LandingPage({ onOpenStory }) {
       }}>
         {/* Heading: Welcome to Our Journey From 1st Sem to Forever */}
         <h1 className="font-serif gold-text" style={{
-          fontSize: 'clamp(2.1rem, 6.5vw, 4.4rem)',
+          fontSize: 'clamp(1.9rem, 6.2vw, 4.4rem)',
           fontStyle: 'italic',
           fontWeight: '700',
           lineHeight: '1.25',
-          marginBottom: isMobile ? '32px' : '48px',
+          marginBottom: isMobile ? '28px' : '44px',
           letterSpacing: '0.01em',
           filter: 'drop-shadow(0 4px 15px rgba(0,0,0,0.95))'
         }}>
           Welcome to Our Journey From 1st Sem to Forever
         </h1>
 
-        {/* Shimmering Golden Button */}
-        <button
-          onClick={onOpenStory}
-          className="btn-vintage"
-          style={{
-            fontSize: isMobile ? '1.15rem' : '1.3rem',
-            padding: isMobile ? '16px 32px' : '20px 56px',
-            borderRadius: '50px',
-            width: isMobile ? '100%' : 'auto',
-            justifyContent: 'center'
-          }}
-        >
-          <BookOpen size={isMobile ? 22 : 26} color="#FFF8DC" /> OPEN OUR STORY
-        </button>
+        {/* Shimmering Golden Button — Fully responsive across Desktop, Laptop, Tablet & Mobile */}
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <button
+            onClick={onOpenStory}
+            className="btn-vintage"
+            style={{
+              fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
+              padding: isMobile ? '14px 28px' : '18px 52px',
+              borderRadius: '50px',
+              width: isMobile ? '92%' : 'auto',
+              maxWidth: '440px',
+              justifyContent: 'center',
+              whiteSpace: 'nowrap',
+              boxSizing: 'border-box'
+            }}
+          >
+            <BookOpen size={isMobile ? 20 : 26} color="#FFF8DC" style={{ flexShrink: 0 }} />
+            <span>OPEN OUR STORY</span>
+          </button>
+        </div>
       </div>
 
       {/* Footer subtle sign-off */}
