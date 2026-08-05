@@ -1,62 +1,42 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Lock, KeyRound, Heart } from 'lucide-react';
+import { Lock, KeyRound, ArrowRight } from 'lucide-react';
 
 export default function PinLockScreen({ onUnlock }) {
-  const [pin, setPin] = useState('');
+  const [passcode, setPasscode] = useState('');
   const [error, setError] = useState(false);
   const [shake, setShake] = useState(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    // Auto-focus input on render
+    // Auto-focus input on render to open native device keyboard
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
 
-  const handlePinChange = (e) => {
-    const val = e.target.value.replace(/\D/g, '').slice(0, 4);
-    setPin(val);
+  const handleInputChange = (e) => {
+    const val = e.target.value;
+    setPasscode(val);
     setError(false);
 
-    if (val.length === 4) {
-      if (val === '1234') {
-        onUnlock();
-      } else {
-        setError(true);
-        setShake(true);
-        setTimeout(() => {
-          setPin('');
-          setShake(false);
-        }, 500);
-      }
+    // Case-insensitive passcode check: 'divyz', 'Divyz', 'DIVYZ', etc.
+    if (val.trim().toLowerCase() === 'divyz') {
+      onUnlock();
     }
   };
 
-  const handleKeyPress = (num) => {
-    if (pin.length < 4) {
-      const newPin = pin + num;
-      setPin(newPin);
-      setError(false);
-
-      if (newPin.length === 4) {
-        if (newPin === '1234') {
-          onUnlock();
-        } else {
-          setError(true);
-          setShake(true);
-          setTimeout(() => {
-            setPin('');
-            setShake(false);
-          }, 500);
-        }
-      }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (passcode.trim().toLowerCase() === 'divyz') {
+      onUnlock();
+    } else {
+      setError(true);
+      setShake(true);
+      setTimeout(() => {
+        setPasscode('');
+        setShake(false);
+      }, 500);
     }
-  };
-
-  const handleBackspace = () => {
-    setPin((prev) => prev.slice(0, -1));
-    setError(false);
   };
 
   return (
@@ -70,34 +50,16 @@ export default function PinLockScreen({ onUnlock }) {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '20px',
-      userSelect: 'none'
+      padding: '20px'
     }}>
-      {/* Hidden native input for mobile virtual keyboard */}
-      <input
-        ref={inputRef}
-        type="password"
-        pattern="[0-9]*"
-        inputMode="numeric"
-        value={pin}
-        onChange={handlePinChange}
-        style={{
-          position: 'absolute',
-          opacity: 0,
-          pointerEvents: 'none',
-          width: '1px',
-          height: '1px'
-        }}
-      />
-
       {/* Main Lock Card */}
       <div style={{
         width: '100%',
-        maxWidth: '400px',
+        maxWidth: '420px',
         backgroundColor: 'rgba(18, 12, 10, 0.92)',
         border: '2px solid rgba(232, 199, 122, 0.45)',
         borderRadius: '24px',
-        padding: '36px 28px',
+        padding: '40px 28px',
         boxShadow: '0 25px 70px rgba(0,0,0,0.95), 0 0 40px rgba(177,18,38,0.3)',
         backdropFilter: 'blur(16px)',
         textAlign: 'center',
@@ -114,130 +76,86 @@ export default function PinLockScreen({ onUnlock }) {
           borderRadius: '50%',
           backgroundColor: 'rgba(177, 18, 38, 0.2)',
           border: '1.5px solid #D4AF37',
-          marginBottom: '16px',
+          marginBottom: '18px',
           boxShadow: '0 0 20px rgba(177, 18, 38, 0.5)'
         }}>
           <Lock size={28} color="#FFD700" />
         </div>
 
-        <h2 className="font-cinzel gold-text" style={{ fontSize: '1.6rem', fontWeight: '700', marginBottom: '6px' }}>
+        <h2 className="font-cinzel gold-text" style={{ fontSize: '1.7rem', fontWeight: '700', marginBottom: '8px' }}>
           Enter Passcode
         </h2>
 
-        <p className="font-serif" style={{ color: '#F5E5C9', fontSize: '0.95rem', fontStyle: 'italic', marginBottom: '24px' }}>
-          Please enter the secret 4-digit PIN to access our story
+        <p className="font-serif" style={{ color: '#F5E5C9', fontSize: '0.95rem', fontStyle: 'italic', marginBottom: '28px' }}>
+          Please enter the secret passcode to access our story
         </p>
 
-        {/* 4 PIN Dots */}
-        <div
-          onClick={() => inputRef.current && inputRef.current.focus()}
-          style={{
+        {/* Text Input Form using native device keyboard */}
+        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+          <div style={{
+            position: 'relative',
             display: 'flex',
-            justifyContent: 'center',
-            gap: '16px',
-            marginBottom: '28px',
-            cursor: 'pointer'
-          }}
-        >
-          {[0, 1, 2, 3].map((idx) => {
-            const isFilled = pin.length > idx;
-            return (
-              <div
-                key={idx}
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  borderRadius: '50%',
-                  border: error ? '2px solid #FF4D4D' : (isFilled ? '2px solid #FFD700' : '2px solid rgba(232, 199, 122, 0.4)'),
-                  backgroundColor: error ? '#FF4D4D' : (isFilled ? '#B11226' : 'transparent'),
-                  boxShadow: isFilled ? '0 0 15px rgba(255, 215, 0, 0.8)' : 'none',
-                  transition: 'all 0.2s ease'
-                }}
-              />
-            );
-          })}
-        </div>
-
-        {/* Error message if PIN is wrong */}
-        {error && (
-          <p style={{ color: '#FF4D4D', fontSize: '0.85rem', fontWeight: '600', marginBottom: '16px', fontFamily: "'Cormorant Garamond', serif" }}>
-            Incorrect Passcode. Please try again ♡
-          </p>
-        )}
-
-        {/* On-screen Keypad */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '12px',
-          maxWidth: '280px',
-          margin: '0 auto'
-        }}>
-          {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((num) => (
-            <button
-              key={num}
-              onClick={() => handleKeyPress(num)}
+            alignItems: 'center',
+            marginBottom: '16px'
+          }}>
+            <input
+              ref={inputRef}
+              type="text"
+              value={passcode}
+              onChange={handleInputChange}
+              placeholder="Enter passcode..."
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck="false"
               style={{
-                padding: '14px',
-                fontSize: '1.25rem',
-                fontWeight: '700',
-                fontFamily: "'Cinzel', serif",
+                width: '100%',
+                padding: '16px 54px 16px 20px',
+                fontSize: '1.15rem',
+                fontFamily: "'Cormorant Garamond', serif",
                 color: '#FFF8DC',
                 backgroundColor: 'rgba(30, 20, 16, 0.85)',
-                border: '1px solid rgba(232, 199, 122, 0.3)',
+                border: error ? '2px solid #FF4D4D' : '1.5px solid rgba(232, 199, 122, 0.4)',
                 borderRadius: '50px',
-                cursor: 'pointer',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                transition: 'all 0.15s ease',
-                touchAction: 'manipulation'
+                outline: 'none',
+                boxShadow: error ? '0 0 15px rgba(255,77,77,0.5)' : 'inset 0 2px 10px rgba(0,0,0,0.8)',
+                transition: 'all 0.2s ease'
               }}
-              onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.94)'}
-              onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            />
+
+            <button
+              type="submit"
+              style={{
+                position: 'absolute',
+                right: '8px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: '42px',
+                height: '42px',
+                borderRadius: '50%',
+                backgroundColor: '#B11226',
+                border: '1px solid #FFD700',
+                color: '#FFF8DC',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: '0 2px 10px rgba(177,18,38,0.6)',
+                transition: 'all 0.2s ease'
+              }}
+              title="Unlock Story"
             >
-              {num}
+              <ArrowRight size={20} />
             </button>
-          ))}
-          <div />
-          <button
-            onClick={() => handleKeyPress('0')}
-            style={{
-              padding: '14px',
-              fontSize: '1.25rem',
-              fontWeight: '700',
-              fontFamily: "'Cinzel', serif",
-              color: '#FFF8DC',
-              backgroundColor: 'rgba(30, 20, 16, 0.85)',
-              border: '1px solid rgba(232, 199, 122, 0.3)',
-              borderRadius: '50px',
-              cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-              transition: 'all 0.15s ease',
-              touchAction: 'manipulation'
-            }}
-            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.94)'}
-            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            0
-          </button>
-          <button
-            onClick={handleBackspace}
-            style={{
-              padding: '14px',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              color: '#E8C77A',
-              backgroundColor: 'rgba(30, 20, 16, 0.85)',
-              border: '1px solid rgba(232, 199, 122, 0.3)',
-              borderRadius: '50px',
-              cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-              transition: 'all 0.15s ease',
-              touchAction: 'manipulation'
-            }}
-          >
-            Delete
-          </button>
-        </div>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <p style={{ color: '#FF4D4D', fontSize: '0.88rem', fontWeight: '600', marginTop: '6px', fontFamily: "'Cormorant Garamond', serif" }}>
+              Incorrect Passcode. Please try again ♡
+            </p>
+          )}
+        </form>
       </div>
     </div>
   );
