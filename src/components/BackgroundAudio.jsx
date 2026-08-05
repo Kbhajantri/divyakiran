@@ -9,7 +9,7 @@ export default function BackgroundAudio({ isAudioPlaying, setIsAudioPlaying }) {
   // Exact local audio file resolved via getAssetUrl for relative paths
   const audioSource = getAssetUrl("/assets/aashiqui2_piano_loop.mp3");
 
-  // Play/pause and volume control effect
+  // Play/pause and volume control effect strictly controlled by isAudioPlaying
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -20,30 +20,13 @@ export default function BackgroundAudio({ isAudioPlaying, setIsAudioPlaying }) {
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.catch((error) => {
-          console.log("Autoplay waiting for user interaction:", error);
+          console.log("Audio playback waiting for gesture:", error);
         });
       }
     } else {
       audio.pause();
     }
   }, [isAudioPlaying, volume]);
-
-  // Global user interaction listener to start audio on initial site open
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      if (audioRef.current && isAudioPlaying) {
-        audioRef.current.play().catch(() => {});
-      }
-    };
-
-    window.addEventListener('click', handleFirstInteraction, { once: true });
-    window.addEventListener('touchstart', handleFirstInteraction, { once: true });
-
-    return () => {
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-    };
-  }, [isAudioPlaying]);
 
   const handleVolumeChange = (e) => {
     const newVol = parseFloat(e.target.value);
@@ -81,7 +64,6 @@ export default function BackgroundAudio({ isAudioPlaying, setIsAudioPlaying }) {
         ref={audioRef}
         src={audioSource}
         loop
-        autoPlay
       />
 
       {/* Music Icon & Play Toggle */}
@@ -105,7 +87,7 @@ export default function BackgroundAudio({ isAudioPlaying, setIsAudioPlaying }) {
       {/* Volume Control Slider */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}>
         {volume === 0 || !isAudioPlaying ? (
-          <VolumeX size={16} color="#9CA3AF" style={{ cursor: 'pointer' }} onClick={() => setVolume(0.7)} />
+          <VolumeX size={16} color="#9CA3AF" style={{ cursor: 'pointer' }} onClick={() => { setVolume(0.7); setIsAudioPlaying(true); }} />
         ) : (
           <Volume2 size={16} color="#E8C77A" style={{ cursor: 'pointer' }} onClick={() => setVolume(0)} />
         )}
