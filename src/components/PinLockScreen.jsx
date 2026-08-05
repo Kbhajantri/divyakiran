@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Lock, KeyRound, ArrowRight } from 'lucide-react';
+import { Lock, ArrowRight } from 'lucide-react';
 
 export default function PinLockScreen({ onUnlock }) {
   const [passcode, setPasscode] = useState('');
@@ -22,6 +22,14 @@ export default function PinLockScreen({ onUnlock }) {
     // Case-insensitive passcode check: 'divyz', 'Divyz', 'DIVYZ', etc.
     if (val.trim().toLowerCase() === 'divyz') {
       onUnlock();
+    } else if (val.trim().length >= 5) {
+      // If 5 characters are entered and wrong, trigger shake and erase written passcode
+      setError(true);
+      setShake(true);
+      setTimeout(() => {
+        setPasscode('');
+        setShake(false);
+      }, 450);
     }
   };
 
@@ -35,7 +43,7 @@ export default function PinLockScreen({ onUnlock }) {
       setTimeout(() => {
         setPasscode('');
         setShake(false);
-      }, 500);
+      }, 450);
     }
   };
 
