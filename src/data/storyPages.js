@@ -16,7 +16,8 @@ export const STORY_PAGES = [
     chapterTitle: "Our Story — Journey from 1st sem to forever",
     dateMeta: "Belagavi to Hubballi... Miles apart, heart close.",
     quote: "This is our story. ♡",
-    exactImage: getAssetUrl("/assets/user_parchment_exact_cover.jpg")
+    exactImage: getAssetUrl("/assets/user_parchment_exact_cover.jpg"),
+    isPortraitPage: true
   },
   {
     chapterNumber: 1,
@@ -164,6 +165,16 @@ export const STORY_PAGES = [
   },
   {
     chapterNumber: 17,
+    seasonInfo: "Forever & Always ❤️",
+    episodeTitle: "Kiran & Divya",
+    chapterTitle: "Kiran & Divya — Our Love Story",
+    dateMeta: "Choosing the same hand through every season of life",
+    quote: "Because in the end, love isn't just about holding hands. It's about choosing the same hand, again and again, through every season of life. ♡",
+    exactImage: getAssetUrl("/assets/user_parchment_exact_kiran_divya_portrait.jpg"),
+    isPortraitPage: true
+  },
+  {
+    chapterNumber: 18,
     seasonInfo: "Finale",
     episodeTitle: "Final Chapter",
     chapterTitle: "The Best Chapter Is Still Being Written ❤️",

@@ -19,7 +19,8 @@ export default function JourneyViewer({ pages }) {
 
   const totalPages = pages.length;
   const currentPage = pages[currentPageIndex];
-  const isCoverPage = currentPageIndex === 0;
+  // Size both the 1st page (Cover) and any single portrait page (Page 18) with exact portrait proportions
+  const isCoverPage = currentPageIndex === 0 || !!currentPage?.isPortraitPage;
 
   const handleNext = () => {
     if (currentPageIndex < totalPages - 1 && !isFlipping) {
