@@ -85,20 +85,30 @@ export default function JourneyViewer({ pages }) {
         justifyContent: 'space-between',
         alignItems: isMobile ? 'flex-start' : 'center',
         marginBottom: isMobile ? '14px' : '20px',
-        gap: isMobile ? '8px' : '0',
+        gap: isMobile ? '8px' : '16px',
         transition: 'width 0.3s ease, max-width 0.3s ease'
       }}>
-        <div>
+        <div style={{ flex: '1 1 auto', minWidth: 0 }}>
           <span style={{ fontSize: isMobile ? '0.75rem' : '0.85rem', color: '#B11226', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
             OUR JOURNEY • PAGE {currentPageIndex + 1} OF {totalPages}
           </span>
-          <h1 className="font-cinzel gold-text" style={{ fontSize: isMobile ? '1.35rem' : '1.9rem', fontWeight: '800', marginTop: '2px' }}>
+          <h1 className="font-cinzel gold-text" style={{ fontSize: isMobile ? '1.35rem' : '1.9rem', fontWeight: '800', marginTop: '2px', wordBreak: 'break-word' }}>
             {currentPage.chapterTitle || `Page ${currentPageIndex + 1}`}
           </h1>
         </div>
 
-        {/* Clean Page Counter */}
-        <span className="font-serif" style={{ color: '#E8C77A', fontSize: isMobile ? '0.95rem' : '1.05rem', fontWeight: '600' }}>
+        {/* Clean Page Counter — whiteSpace nowrap so it NEVER wraps onto two lines */}
+        <span
+          className="font-serif"
+          style={{
+            color: '#E8C77A',
+            fontSize: isMobile ? '0.95rem' : '1.05rem',
+            fontWeight: '600',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            alignSelf: isMobile ? 'flex-start' : 'center'
+          }}
+        >
           Page {currentPageIndex + 1} / {totalPages}
         </span>
       </div>

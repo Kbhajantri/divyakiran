@@ -113,7 +113,7 @@ export const STORY_PAGES = [
     chapterNumber: 11,
     seasonInfo: "Season 7 — The Epilogue",
     episodeTitle: "Epilogue",
-    chapterTitle: "Happy Girlfriend's Day, Divya. ♡",
+    chapterTitle: "Happy Girlfriend's Day, Divya",
     dateMeta: "Epilogue (Pages 5/6 & 6/6)",
     quote: "I promise to keep choosing you...",
     exactImage: getAssetUrl("/assets/user_parchment_exact_ep7_part3.jpg")
@@ -177,7 +177,7 @@ export const STORY_PAGES = [
     chapterNumber: 18,
     seasonInfo: "Finale",
     episodeTitle: "Final Chapter",
-    chapterTitle: "The Best Seasons Is Still Being Written ❤️",
+    chapterTitle: "The Best Seasons Is Still Being Written",
     dateMeta: "Forever Yours, Kiran",
     quote: "Every day with you becomes another beautiful page. And I promise... I'll keep writing our story forever. ♡",
     exactImage: getAssetUrl("/assets/user_parchment_exact_finale.jpg"),
