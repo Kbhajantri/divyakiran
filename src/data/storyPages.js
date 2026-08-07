@@ -177,14 +177,11 @@ export const STORY_PAGES = [
     chapterNumber: 18,
     seasonInfo: "Finale",
     episodeTitle: "Final Chapter",
-    chapterTitle: "The Best Chapter Is Still Being Written ❤️",
-    dateMeta: "Forever Yours",
-    quote: "Happy Girlfriend's Day, My Love ❤️",
-    isFinale: true,
-    paragraphs: [
-      "This story doesn't end here.",
-      "Every day with you becomes another beautiful page.",
-      "And I promise... I'll keep writing our story forever."
-    ]
+    chapterTitle: "The Best Seasons Is Still Being Written ❤️",
+    dateMeta: "Forever Yours, Kiran",
+    quote: "Every day with you becomes another beautiful page. And I promise... I'll keep writing our story forever. ♡",
+    exactImage: getAssetUrl("/assets/user_parchment_exact_finale.jpg"),
+    isPortraitPage: true,
+    isFinale: true
   }
 ];

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, RotateCcw, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 
 export default function JourneyViewer({ pages }) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
@@ -19,7 +19,7 @@ export default function JourneyViewer({ pages }) {
 
   const totalPages = pages.length;
   const currentPage = pages[currentPageIndex];
-  // Size both the 1st page (Cover) and any single portrait page (Page 18) with exact portrait proportions
+  // Size both the 1st page (Cover), Page 18, and Page 19 (Finale) with exact portrait proportions
   const isCoverPage = currentPageIndex === 0 || !!currentPage?.isPortraitPage;
 
   const handleNext = () => {
@@ -106,6 +106,7 @@ export default function JourneyViewer({ pages }) {
         width: getCardWidth(),
         maxWidth: '1000px',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         transition: 'width 0.3s ease'
@@ -162,99 +163,66 @@ export default function JourneyViewer({ pages }) {
           display: 'flex',
           justifyContent: 'center'
         }}>
-          {currentPage.exactImage ? (
+          <div style={{
+            borderRadius: isMobile ? '12px' : '16px',
+            border: '1.5px solid rgba(232, 199, 122, 0.35)',
+            boxShadow: '0 25px 70px rgba(0,0,0,0.98), 0 0 25px rgba(177,18,38,0.2)',
+            overflow: 'hidden',
+            backgroundColor: '#050508',
+            padding: isMobile ? '4px' : '6px',
+            transition: 'all 0.3s ease',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            maxHeight: isCoverPage ? (isMobile ? '70vh' : '76vh') : 'none'
+          }}>
             <div style={{
-              borderRadius: isMobile ? '12px' : '16px',
-              border: '1.5px solid rgba(232, 199, 122, 0.35)',
-              boxShadow: '0 25px 70px rgba(0,0,0,0.98), 0 0 25px rgba(177,18,38,0.2)',
-              overflow: 'hidden',
-              backgroundColor: '#050508',
-              padding: isMobile ? '4px' : '6px',
-              transition: 'all 0.3s ease',
+              position: 'relative',
+              width: '100%',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center',
-              maxHeight: isCoverPage ? (isMobile ? '70vh' : '76vh') : 'none'
+              overflow: 'hidden',
+              backgroundColor: '#050508'
             }}>
-              <div style={{
-                position: 'relative',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                overflow: 'hidden',
-                backgroundColor: '#050508'
-              }}>
-                <img
-                  src={currentPage.exactImage}
-                  alt={`Page ${currentPageIndex + 1}`}
-                  style={{
-                    width: isCoverPage ? 'auto' : '100%',
-                    maxHeight: isCoverPage ? (isMobile ? '70vh' : '76vh') : 'auto',
-                    maxWidth: '100%',
-                    objectFit: 'contain',
-                    display: 'block',
-                    imageRendering: '-webkit-optimize-contrast',
-                    filter: 'contrast(1.05) brightness(1.02)'
-                  }}
-                />
-              </div>
+              <img
+                src={currentPage.exactImage}
+                alt={`Page ${currentPageIndex + 1}`}
+                style={{
+                  width: isCoverPage ? 'auto' : '100%',
+                  maxHeight: isCoverPage ? (isMobile ? '70vh' : '76vh') : 'auto',
+                  maxWidth: '100%',
+                  objectFit: 'contain',
+                  display: 'block',
+                  imageRendering: '-webkit-optimize-contrast',
+                  filter: 'contrast(1.05) brightness(1.02)'
+                }}
+              />
             </div>
-          ) : (
-            /* Refined High-Contrast Retro Vintage Finale Card */
-            <div className="parchment-paper deckled-edge" style={{
-              padding: isMobile ? '36px 20px' : '60px 48px',
-              borderRadius: '20px',
-              border: '3px solid #D4C3A3',
-              boxShadow: '0 25px 70px rgba(0,0,0,0.9)',
-              background: 'linear-gradient(135deg, #FAF3E0 0%, #F5E8D0 100%)',
-              textAlign: 'center',
-              width: '100%'
-            }}>
-              <span className="font-serif" style={{ fontSize: '0.9rem', color: '#721B29', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                {currentPage.seasonInfo || 'Finale'}
-              </span>
-
-              <h2 className="font-script" style={{
-                fontSize: isMobile ? '2.4rem' : '3.8rem',
-                color: '#721B29',
-                marginTop: '8px',
-                marginBottom: '16px',
-                lineHeight: '1.2'
-              }}>
-                The Best Chapter Is Still Being Written ❤️
-              </h2>
-
-              <p className="font-serif" style={{
-                fontSize: isMobile ? '1.05rem' : '1.35rem',
-                color: '#3D2214',
-                fontStyle: 'italic',
-                lineHeight: '1.6',
-                margin: '0 auto 24px auto'
-              }}>
-                "Every day with you becomes another beautiful page. And I promise... I'll keep writing our story forever."
-              </p>
-
-              <div style={{ display: 'inline-block', margin: '10px 0 16px 0' }}>
-                <Heart size={isMobile ? 48 : 64} color="#721B29" fill="#721B29" className="heart-pulse" />
-              </div>
-
-              <h1 className="font-script" style={{
-                fontSize: isMobile ? '2.2rem' : '3.2rem',
-                color: '#721B29',
-                fontWeight: '700',
-                marginBottom: '28px'
-              }}>
-                Forever Yours, Kiran ❤️
-              </h1>
-
-              <button onClick={handleRestart} className="btn-vintage">
-                <RotateCcw size={18} /> Restart Journey
-              </button>
-            </div>
-          )}
+          </div>
         </div>
 
-        {/* Floating Right Side Navigation Button — Positioned safely outside manuscript card */}
+        {/* On Last Page (Page 19): Sleek Restart Journey Button */}
+        {currentPageIndex === totalPages - 1 && (
+          <div style={{
+            marginTop: '28px',
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%'
+          }}>
+            <button
+              onClick={handleRestart}
+              className="btn-vintage"
+              style={{
+                fontSize: isMobile ? '1.05rem' : '1.2rem',
+                padding: isMobile ? '14px 28px' : '16px 44px'
+              }}
+            >
+              <RotateCcw size={20} /> Restart Journey
+            </button>
+          </div>
+        )}
+
+        {/* Floating Right Side Navigation Button (Disabled on last page) */}
         {currentPageIndex < totalPages - 1 && (
           <button
             onClick={handleNext}
