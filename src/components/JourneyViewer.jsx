@@ -19,8 +19,8 @@ export default function JourneyViewer({ pages }) {
 
   const totalPages = pages.length;
   const currentPage = pages[currentPageIndex];
-  // Size both the 1st page (Cover), Page 18, and Page 19 (Finale) with exact portrait proportions
-  const isCoverPage = currentPageIndex === 0 || !!currentPage?.isPortraitPage;
+  // Size the 1st page (Cover), 18th page (Portrait), and 19th page (Finale) with exact identical portrait dimensions
+  const isCoverPage = currentPageIndex === 0 || currentPageIndex === totalPages - 2 || currentPageIndex === totalPages - 1 || !!currentPage?.isPortraitPage;
 
   const handleNext = () => {
     if (currentPageIndex < totalPages - 1 && !isFlipping) {
@@ -53,8 +53,11 @@ export default function JourneyViewer({ pages }) {
     }, 250);
   };
 
-  // Compute manuscript card width dynamically to guarantee buttons NEVER overlap the image
+  // Compute manuscript card width dynamically so 1st, 18th, and 19th pages are identical in size on all screens
   const getCardWidth = () => {
+    if (isCoverPage) {
+      return isMobile ? '92vw' : (isTablet ? 'min(62vw, 620px)' : 'min(48vw, 560px)');
+    }
     if (isMobile) return '96vw';
     if (isTablet) return 'calc(100vw - 260px)';
     return 'min(72vw, 1000px)';
@@ -76,14 +79,14 @@ export default function JourneyViewer({ pages }) {
       {/* Top Header — Title & Page Counter */}
       <div style={{
         width: getCardWidth(),
-        maxWidth: '1000px',
+        maxWidth: isCoverPage ? '560px' : '1000px',
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between',
         alignItems: isMobile ? 'flex-start' : 'center',
         marginBottom: isMobile ? '14px' : '20px',
         gap: isMobile ? '8px' : '0',
-        transition: 'width 0.3s ease'
+        transition: 'width 0.3s ease, max-width 0.3s ease'
       }}>
         <div>
           <span style={{ fontSize: isMobile ? '0.75rem' : '0.85rem', color: '#B11226', fontWeight: '700', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
@@ -104,12 +107,12 @@ export default function JourneyViewer({ pages }) {
       <div style={{
         position: 'relative',
         width: getCardWidth(),
-        maxWidth: '1000px',
+        maxWidth: isCoverPage ? '560px' : '1000px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        transition: 'width 0.3s ease'
+        transition: 'width 0.3s ease, max-width 0.3s ease'
       }}>
         {/* Floating Left Side Navigation Button — Positioned safely outside manuscript card */}
         {currentPageIndex > 0 && (
@@ -201,29 +204,8 @@ export default function JourneyViewer({ pages }) {
           </div>
         </div>
 
-        {/* On Last Page (Page 19): Sleek Restart Journey Button */}
-        {currentPageIndex === totalPages - 1 && (
-          <div style={{
-            marginTop: '28px',
-            display: 'flex',
-            justifyContent: 'center',
-            width: '100%'
-          }}>
-            <button
-              onClick={handleRestart}
-              className="btn-vintage"
-              style={{
-                fontSize: isMobile ? '1.05rem' : '1.2rem',
-                padding: isMobile ? '14px 28px' : '16px 44px'
-              }}
-            >
-              <RotateCcw size={20} /> Restart Journey
-            </button>
-          </div>
-        )}
-
-        {/* Floating Right Side Navigation Button (Disabled on last page) */}
-        {currentPageIndex < totalPages - 1 && (
+        {/* Floating Right Side Navigation Button: Next Page (Pages 1..18) or Restart Journey (Page 19) */}
+        {currentPageIndex < totalPages - 1 ? (
           <button
             onClick={handleNext}
             style={{
@@ -262,6 +244,46 @@ export default function JourneyViewer({ pages }) {
               Next Page
             </span>
             <ChevronRight size={isMobile ? 18 : 22} color="#FFF" />
+          </button>
+        ) : (
+          <button
+            onClick={handleRestart}
+            style={{
+              position: 'fixed',
+              right: isMobile ? '12px' : (isTablet ? '16px' : '24px'),
+              top: isMobile ? 'auto' : '50%',
+              bottom: isMobile ? '16px' : 'auto',
+              transform: isMobile ? 'none' : 'translateY(-50%)',
+              zIndex: 99,
+              backgroundColor: 'rgba(177, 18, 38, 0.94)',
+              border: '1.5px solid #D4AF37',
+              color: '#FFF',
+              padding: isMobile ? '10px 18px' : '14px 22px',
+              borderRadius: '50px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 8px 25px rgba(177, 18, 38, 0.8), 0 0 20px rgba(212, 175, 55, 0.5)',
+              backdropFilter: 'blur(12px)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = isMobile ? 'scale(1.05)' : 'translateY(-50%) scale(1.08)';
+              e.currentTarget.style.borderColor = '#FFF';
+              e.currentTarget.style.backgroundColor = '#B11226';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = isMobile ? 'none' : 'translateY(-50%) scale(1)';
+              e.currentTarget.style.borderColor = '#D4AF37';
+              e.currentTarget.style.backgroundColor = 'rgba(177, 18, 38, 0.94)';
+            }}
+            title="Restart Journey"
+          >
+            <span className="font-serif" style={{ fontSize: isMobile ? '0.9rem' : '1rem', fontWeight: '700' }}>
+              Restart Journey
+            </span>
+            <RotateCcw size={isMobile ? 16 : 18} color="#FFD700" />
           </button>
         )}
       </div>
